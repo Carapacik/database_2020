@@ -15,7 +15,7 @@ CREATE TABLE Service(
 id_service int IDENTITY(1,1) NOT NULL,
 id_hairdresser int NOT NULL,
 type varchar(50) NOT NULL,
-price decimal(5,2) NOT NULL,
+price money NOT NULL,
 PRIMARY KEY  (id_service)
 )
 GO
@@ -25,7 +25,7 @@ id_servicesperformed int IDENTITY(1,1) NOT NULL,
 id_hairdresser int NOT NULL,
 id_service int NOT NULL,
 type varchar(50) NOT NULL,
-price decimal(5,2) NOT NULL,
+price money NOT NULL,
 date date NOT NULL,
 evaluation tinyint NOT NULL,
 PRIMARY KEY  (id_servicesperformed)
