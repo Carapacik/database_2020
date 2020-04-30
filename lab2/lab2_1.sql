@@ -6,7 +6,7 @@ id_hairdresser int IDENTITY(1,1) NOT NULL,
 firstname varchar(50) NOT NULL,
 lastname varchar(50) NOT NULL,
 work_experience tinyint NOT NULL,
-gender varchar(10) NOT NULL,
+gender tinyint NOT NULL,
 PRIMARY KEY  (id_hairdresser)
 )
 GO

@@ -6,7 +6,7 @@ id_children int IDENTITY(1,1) NOT NULL,
 firstname varchar(50) NOT NULL,
 lastname varchar(50) NOT NULL,
 birthdate date NOT NULL,
-gender varchar(10) NOT NULL,
+gender tinyint NOT NULL,
 PRIMARY KEY  (id_children)
 )
 GO
@@ -54,10 +54,10 @@ PRIMARY KEY (id_injectionmanufacturer)
 GO
 
 --1 INSERT
-INSERT INTO Children VALUES('Alex','Dehunt','2005-05-05','male')
-INSERT INTO Children VALUES('Maria','Sanders','2004-04-05','female')
-INSERT INTO Children VALUES('Lola','Ops','2006-12-12','female')
-INSERT INTO Children VALUES('Mila','Gorina','2005-12-12','female')
+INSERT INTO Children VALUES('Alex','Dehunt','2005-05-05','0')
+INSERT INTO Children VALUES('Maria','Sanders','2004-04-05','1')
+INSERT INTO Children VALUES('Lola','Ops','2006-12-12','1')
+INSERT INTO Children VALUES('Mila','Gorina','2005-12-12','1')
 INSERT INTO InjectionManufacturer VALUES('VOS','Moscow, Krasnoameyskaya 20,', 89991235656, 145)
 INSERT INTO InjectionManufacturer VALUES('MEM','Moscow, Krasnoameyskaya 19,', 89991235655, 160)
 --
@@ -74,7 +74,7 @@ FROM Children AS Child, Injection AS Inj, Clinic AS Clinic
 --2 DELETE
 DELETE DoneInjection
 --
-DELETE FROM Children WHERE gender = 'male'
+DELETE FROM Children WHERE gender = '0'
 --
 	--Заполнение строчки для проверки удаления
 INSERT INTO DoneInjection (id_children, id_injection, name, type, id_clinic, creation_date) 
@@ -86,7 +86,7 @@ TRUNCATE TABLE DoneInjection
 --3 UPDATE
 UPDATE Injection SET contraindications = 'damage to brain'
 --
-UPDATE Children SET gender = 'male' WHERE firstname = 'Lola'
+UPDATE Children SET gender = '0' WHERE firstname = 'Lola'
 --
 UPDATE Children SET firstname = 'Gena', lastname = 'Gorin', birthdate = '2001-05-04' WHERE id_children = 3
 
@@ -95,7 +95,7 @@ SELECT firstname, lastname, gender FROM Children
 --
 SELECT * FROM Injection
 --
-SELECT * FROM Children WHERE gender = 'female'
+SELECT * FROM Children WHERE gender = '1'
 
 --5 SELECT ORDER BY + TOP (LIMIT)
 SELECT TOP 3 * FROM Children ORDER BY birthdate ASC
@@ -151,8 +151,8 @@ SELECT * FROM Children FULL OUTER JOIN DoneInjection ON DoneInjection.id_childre
 
 --10 Подзапросы
 	--Добавление строк для наглядности
-INSERT INTO Children VALUES('Alesha','Lastochkin','2003-09-10','male')
-INSERT INTO Children VALUES('Bobik','Anatoliyev','2013-09-10','male')
+INSERT INTO Children VALUES('Alesha','Lastochkin','2003-09-10','0')
+INSERT INTO Children VALUES('Bobik','Anatoliyev','2013-09-10','0')
 
 SELECT * FROM Children WHERE firstname IN ('Maria', 'Mila')
 --
