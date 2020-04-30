@@ -1,4 +1,4 @@
-CREATE DATABASE ChildrenInjection
+п»їCREATE DATABASE ChildrenInjection
 COLLATE Cyrillic_General_CI_AS
 
 CREATE TABLE Children (
@@ -63,7 +63,7 @@ INSERT INTO InjectionManufacturer VALUES('MEM','Moscow, Krasnoameyskaya 19,', 89
 --
 INSERT INTO Injection (id_injectionmanufacturer, name, contraindications, type, creation_date) VALUES(1, 'Mels','holesterin','intramuscularly', '2020-04-04 13:00:00')
 INSERT INTO Injection (type, name, contraindications, id_injectionmanufacturer, creation_date) VALUES ('intravenously', 'tuberculin', 'water', 1, '2020-04-04 13:30:00')
-INSERT INTO Clinic (phone_number, address,name) VALUES (89912341245, 'Proskolskaya 28', 'Poloclinic №2')
+INSERT INTO Clinic (phone_number, address,name) VALUES (89912341245, 'Proskolskaya 28', 'Poloclinic в„–2')
 --
 INSERT INTO DoneInjection (id_children, id_injection, name, type, id_clinic, creation_date) 
 SELECT Child.id_children, Inj.id_injection, Inj.name, Inj.type, Clinic.id_clinic, Inj.creation_date
@@ -76,7 +76,7 @@ DELETE DoneInjection
 --
 DELETE FROM Children WHERE gender = '0'
 --
-	--Заполнение строчки для проверки удаления
+	--Р—Р°РїРѕР»РЅРµРЅРёРµ СЃС‚СЂРѕС‡РєРё РґР»СЏ РїСЂРѕРІРµСЂРєРё СѓРґР°Р»РµРЅРёСЏ
 INSERT INTO DoneInjection (id_children, id_injection, name, type, id_clinic, creation_date) 
 SELECT Child.id_children, Inj.id_injection, Inj.name, Inj.type, Clinic.id_clinic, Inj.creation_date
 FROM Children AS Child, Injection AS Inj, Clinic AS Clinic
@@ -106,15 +106,15 @@ SELECT TOP 3 * FROM Children ORDER BY birthdate, lastname DESC
 --
 SELECT TOP 3 * FROM Children ORDER BY firstname
 
---6 Работа с датами. Необходимо, чтобы одна из таблиц содержала атрибут с типом DATETIME
-	--Добавляю строку дял проверки
+--6 Р Р°Р±РѕС‚Р° СЃ РґР°С‚Р°РјРё. РќРµРѕР±С…РѕРґРёРјРѕ, С‡С‚РѕР±С‹ РѕРґРЅР° РёР· С‚Р°Р±Р»РёС† СЃРѕРґРµСЂР¶Р°Р»Р° Р°С‚СЂРёР±СѓС‚ СЃ С‚РёРїРѕРј DATETIME.
+	--Р”РѕР±Р°РІР»СЏСЋ СЃС‚СЂРѕРєСѓ РґСЏР» РїСЂРѕРІРµСЂРєРё
 INSERT INTO Injection (id_injectionmanufacturer, name, contraindications, type, creation_date) VALUES(1, 'Alos','holesterin','intramuscularly', '2020-04-04 13:00:00')
 
 SELECT * FROM Injection WHERE creation_date = '2020-04-04 13:00:00'
 --
 SELECT creation_date, MONTH(creation_date) FROM Injection
 
---7 SELECT GROUP BY с функциями агрегации
+--7 SELECT GROUP BY СЃ С„СѓРЅРєС†РёСЏРјРё Р°РіСЂРµРіР°С†РёРё
 SELECT firstname, MIN(birthdate) AS min_birthdate FROM Children GROUP BY firstname
 --
 SELECT firstname, MAX(birthdate) AS max_birthdate FROM Children GROUP BY firstname
@@ -135,7 +135,7 @@ SELECT firstname FROM Children GROUP BY firstname HAVING AVG(id_children) > 3
 --9 SELECT JOIN
 SELECT * FROM InjectionManufacturer LEFT JOIN Injection ON InjectionManufacturer.id_injectionmanufacturer = Injection.id_injectionmanufacturer WHERE type = 'intramuscularly'
 --
-	--Добавление строк для проверки
+	--Р”РѕР±Р°РІР»РµРЅРёРµ СЃС‚СЂРѕРє РґР»СЏ РїСЂРѕРІРµСЂРєРё
 INSERT INTO DoneInjection (id_children, id_injection, name, type, id_clinic, creation_date) 
 SELECT Child.id_children, Inj.id_injection, Inj.name, Inj.type, Clinic.id_clinic, Inj.creation_date
 FROM Children AS Child, Injection AS Inj, Clinic AS Clinic
@@ -149,13 +149,13 @@ WHERE InjectionManufacturer.id_injectionmanufacturer < 3 AND number_of_employes 
 --
 SELECT * FROM Children FULL OUTER JOIN DoneInjection ON DoneInjection.id_children = Children.id_children
 
---10 Подзапросы
-	--Добавление строк для наглядности
+--10 РџРѕРґР·Р°РїСЂРѕСЃС‹
+	--Р”РѕР±Р°РІР»РµРЅРёРµ СЃС‚СЂРѕРє РґР»СЏ РЅР°РіР»СЏРґРЅРѕСЃС‚Рё
 INSERT INTO Children VALUES('Alesha','Lastochkin','2003-09-10','0')
 INSERT INTO Children VALUES('Bobik','Anatoliyev','2013-09-10','0')
 
 SELECT * FROM Children WHERE firstname IN ('Maria', 'Mila')
 --
-	--Добавление строк для наглядности
+	--Р”РѕР±Р°РІР»РµРЅРёРµ СЃС‚СЂРѕРє РґР»СЏ РЅР°РіР»СЏРґРЅРѕСЃС‚Рё
 INSERT INTO Injection (type, name, contraindications, id_injectionmanufacturer, creation_date) VALUES ('intravenously', 'automia', 'megaladon', 2, '2020-04-02 13:00:00')
 SELECT id_injectionmanufacturer, type, (SELECT id_injection FROM Injection WHERE creation_date < '2020-04-03 0:20:00') AS id_injection FROM Injection
