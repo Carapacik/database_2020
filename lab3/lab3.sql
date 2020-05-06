@@ -1,65 +1,18 @@
-﻿CREATE DATABASE ChildrenInjection
+﻿CREATE DATABASE injections
 COLLATE Cyrillic_General_CI_AS
 
-CREATE TABLE Children (
-id_children int IDENTITY(1,1) NOT NULL,
-firstname varchar(50) NOT NULL,
-lastname varchar(50) NOT NULL,
-birthdate date NOT NULL,
-gender tinyint NOT NULL,
-PRIMARY KEY  (id_children)
-)
-GO
-
-CREATE TABLE Injection (
-id_injection int IDENTITY(1,1) NOT NULL,
-id_injectionmanufacturer int NOT NULL,
-name varchar(50) NOT NULL,
-contraindications varchar(50) NOT NULL,
-type varchar(50) NOT NULL,
-creation_date datetime NOT NULL,
-PRIMARY KEY (id_injection)
-)
-GO
-
-CREATE TABLE DoneInjection (
-id_doneinjection int IDENTITY(1,1) NOT NULL,
-id_children int NOT NULL,
-id_injection int NOT NULL,
-id_clinic int NOT NULL,
-name varchar(50) NOT NULL,
-type varchar(50) NOT NULL,
-creation_date datetime NOT NULL,
-PRIMARY KEY (id_doneinjection)
-)
-GO
-
-CREATE TABLE Clinic (
-id_clinic int IDENTITY(1,1) NOT NULL,
-name varchar(50) NOT NULL,
-address varchar(50) NOT NULL,
-phone_number decimal(12) NOT NULL,
-PRIMARY KEY (id_clinic)
-)
-GO
-
-CREATE TABLE InjectionManufacturer(
-id_injectionmanufacturer int IDENTITY(1,1) NOT NULL,
-name varchar(50) NOT NULL,
-address varchar(50) NOT NULL,
-phone_number decimal(12) NOT NULL,
-number_of_employes smallint NOT NULL,
-PRIMARY KEY (id_injectionmanufacturer)
-)
-GO
-
 --1 INSERT
-INSERT INTO Children VALUES('Alex','Dehunt','2005-05-05','0')
-INSERT INTO Children VALUES('Maria','Sanders','2004-04-05','1')
-INSERT INTO Children VALUES('Lola','Ops','2006-12-12','1')
-INSERT INTO Children VALUES('Mila','Gorina','2005-12-12','1')
-INSERT INTO InjectionManufacturer VALUES('VOS','Moscow, Krasnoameyskaya 20,', 89991235656, 145)
-INSERT INTO InjectionManufacturer VALUES('MEM','Moscow, Krasnoameyskaya 19,', 89991235655, 160)
+INSERT INTO Children 
+VALUES
+	('Alex','Dehunt','2005-05-05','0'),
+	('Maria','Sanders','2004-04-05','1'),
+	('Lola','Ops','2006-12-12','1'),
+	('Mila','Gorina','2005-12-12','1');
+
+INSERT INTO InjectionManufacturer 
+VALUES
+	('VOS','Moscow, Krasnoameyskaya 20,', 89991235656, 145),
+	('MEM','Moscow, Krasnoameyskaya 19,', 89991235655, 160);
 --
 INSERT INTO Injection (id_injectionmanufacturer, name, contraindications, type, creation_date) VALUES(1, 'Mels','holesterin','intramuscularly', '2020-04-04 13:00:00')
 INSERT INTO Injection (type, name, contraindications, id_injectionmanufacturer, creation_date) VALUES ('intravenously', 'tuberculin', 'water', 1, '2020-04-04 13:30:00')
@@ -68,8 +21,6 @@ INSERT INTO Clinic (phone_number, address,name) VALUES (89912341245, 'Proskolska
 INSERT INTO DoneInjection (id_children, id_injection, name, type, id_clinic, creation_date) 
 SELECT Child.id_children, Inj.id_injection, Inj.name, Inj.type, Clinic.id_clinic, Inj.creation_date
 FROM Children AS Child, Injection AS Inj, Clinic AS Clinic
-
-
 
 --2 DELETE
 DELETE DoneInjection
@@ -112,7 +63,7 @@ INSERT INTO Injection (id_injectionmanufacturer, name, contraindications, type, 
 
 SELECT * FROM Injection WHERE creation_date = '2020-04-04 13:00:00'
 --
-SELECT creation_date, MONTH(creation_date) FROM Injection
+SELECT creation_date, MONTH(creation_date) AS Month FROM Injection
 
 --7 SELECT GROUP BY с функциями агрегации
 SELECT firstname, MIN(birthdate) AS min_birthdate FROM Children GROUP BY firstname
@@ -126,7 +77,8 @@ SELECT address, SUM(id_injectionmanufacturer) AS sum_id_injectionmanufacturer FR
 SELECT address, COUNT(id_injectionmanufacturer) AS sum_id_injectionmanufacturer FROM InjectionManufacturer GROUP BY address
 
 --8 SELECT GROUP BY + HAVING
-SELECT firstname FROM Children GROUP BY firstname HAVING MAX(id_children) > 2
+--Заменил запрос неимеющий смысл, на норм запрос
+SELECT name, id_clinic, COUNT(id_children) AS childrens_count FROM DoneInjection GROUP BY name, id_clinic HAVING name = 'Alos' OR name = 'tuberculin'; 
 --
 SELECT address, SUM(id_injectionmanufacturer) AS sum_id_injectionmanufacturer FROM InjectionManufacturer GROUP BY address HAVING SUM(id_injectionmanufacturer) <= 2
 --
@@ -140,7 +92,8 @@ INSERT INTO DoneInjection (id_children, id_injection, name, type, id_clinic, cre
 SELECT Child.id_children, Inj.id_injection, Inj.name, Inj.type, Clinic.id_clinic, Inj.creation_date
 FROM Children AS Child, Injection AS Inj, Clinic AS Clinic
 
-SELECT * FROM Children RIGHT JOIN DoneInjection ON Children.id_children = DoneInjection.id_children WHERE type = 'intramuscularly'
+--Как в 9.1 только RIGHT JOIN
+SELECT * FROM Injection RIGHT JOIN InjectionManufacturer ON InjectionManufacturer.id_injectionmanufacturer = Injection.id_injectionmanufacturer WHERE type = 'intramuscularly'
 --
 SELECT InjectionManufacturer.id_injectionmanufacturer, Injection.id_injection, InjectionManufacturer.number_of_employes, DoneInjection.id_injection, DoneInjection.name
 FROM
