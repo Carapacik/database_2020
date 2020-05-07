@@ -105,11 +105,16 @@ SELECT address, SUM(id_injectionmanufacturer) AS sum_id_injectionmanufacturer FR
 --  COUNT
 SELECT address, COUNT(id_injectionmanufacturer) AS sum_id_injectionmanufacturer FROM InjectionManufacturer GROUP BY address
 
---8 SELECT GROUP BY + HAVING 
---  Написать 3 любых запроса с использованием GROUP BY + HAVING
+--8 SELECT GROUP BY + HAVING. Написать 3 любых запроса с использованием GROUP BY + HAVING
 
+	-- Добавление строк для проверки
+INSERT INTO Injection (id_injectionmanufacturer, name, contraindications, type, creation_date) 
+VALUES
+	(1, 'Mels','holesterin','intramuscularly', '2020-04-04 12:00:00'),
+	(2, 'tuberculin','water','intramuscularly', '2020-04-04 12:00:00'),
+	(1, 'tuberculin','water','intramuscularly', '2020-04-04 12:01:00');
 --  Заменил запрос неимеющий смысл, на норм запрос
-SELECT name, id_clinic, COUNT(id_children) AS childrens_count FROM DoneInjection GROUP BY name, id_clinic HAVING name = 'Alos' OR name = 'tuberculin'; 
+SELECT name, id_injectionmanufacturer FROM Injection GROUP BY name, id_injectionmanufacturer HAVING MAX(creation_date) < '2020-04-04 13:30:00.000'; 
 
 SELECT address, SUM(id_injectionmanufacturer) AS sum_id_injectionmanufacturer FROM InjectionManufacturer GROUP BY address HAVING SUM(id_injectionmanufacturer) <= 2
 
