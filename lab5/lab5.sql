@@ -36,15 +36,22 @@ WHERE
 
 --3 Дать список лекарств компании “Фарма”, на которые не были сделаны заказы до 25 января
 SELECT 
-	medicine.id_medicine,
+	medicine.id_medicine, 
 	medicine.name
 FROM medicine
-INNER JOIN production ON medicine.id_medicine = production.id_medicine
-INNER JOIN [order] ON production.id_production = [order].id_production
-INNER JOIN company ON company.id_company = production.id_company
-WHERE company.name = 'Фарма'
-GROUP BY medicine.id_medicine, medicine.name
-HAVING MIN([order].date) >= '2019-01-25'
+LEFT JOIN production ON medicine.id_medicine = production.id_medicine
+LEFT JOIN company ON production.id_company = company.id_company
+LEFT JOIN [order] ON production.id_production = [order].id_production
+WHERE
+	company.name = 'Фарма' AND
+	production.id_production NOT IN(SELECT [order].id_production
+									FROM [order]
+									WHERE [order].date < '2019-01-25')
+GROUP BY medicine.id_medicine, medicine.name;		
+
+	-- Добавление для проверки 3-его задания
+INSERT [dbo].[medicine] ([id_medicine], [name], [cure_duration]) VALUES (1001, N'МММ', 11);
+INSERT [dbo].[production] ( [id_company], [id_medicine], [price], [rating]) VALUES (8, 1001, 3000, 3);
 
 --4 Дать минимальный и максимальный баллы лекарств каждой фирмы, которая оформила не менее 120 заказов
 SELECT 
