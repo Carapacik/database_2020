@@ -109,54 +109,33 @@ BEGIN TRANSACTION
 COMMIT;
 
 --9  Добавить необходимые индексы для всех таблиц
---booking--
 CREATE NONCLUSTERED INDEX [IX_booking_id_client] ON booking(
 	[id_client] ASC
 )
 
--- hotel--
-CREATE NONCLUSTERED INDEX [IX_hotel_id_hotel-name] ON hotel(
-	[id_hotel] ASC,
-	[name] ASC
+CREATE UNIQUE NONCLUSTERED INDEX [IU_client_phone] ON client(
+	[phone] ASC
 )
 
 CREATE NONCLUSTERED INDEX [IX_hotel_name] ON hotel(
 	[name] ASC
 )
 
---room--
-CREATE NONCLUSTERED INDEX [IX_room_id_hotel] ON room(
-	[id_hotel] ASC
-)
-
-CREATE NONCLUSTERED INDEX [IX_room_id_room_category] ON room(
+CREATE NONCLUSTERED INDEX [IX_room_id_hotel-id_room_category] ON room(
+	[id_hotel] ASC,
 	[id_room_category] ASC
-)
-
---room_category--
-CREATE NONCLUSTERED INDEX [IX_room_category_id_room_category-name] ON room_category(
-	[id_room_category] ASC,
-	[name] ASC
 )
 
 CREATE NONCLUSTERED INDEX [IX_room_category_name] ON room_category(
 	[name] ASC
 )
 
---room_in_booking--
-CREATE NONCLUSTERED INDEX [IX_room_in_booking_id_room] ON room_in_booking(
-	[id_room] ASC
-)
-
-CREATE NONCLUSTERED INDEX [IX_room_in_booking_id_booking] ON room_in_booking(
+CREATE NONCLUSTERED INDEX [IX_room_in_booking_id_room-id_booking] ON room_in_booking(
+	[id_room] ASC,
 	[id_booking] ASC
 )
 
 CREATE NONCLUSTERED INDEX [IX_room_in_booking_checkin_date-checkout_date] ON room_in_booking(
 	[checkin_date] ASC,
-	[checkout_date] ASC
-)
-
-CREATE NONCLUSTERED INDEX [IX_room_in_booking_checkout_date] ON room_in_booking(
 	[checkout_date] ASC
 )
