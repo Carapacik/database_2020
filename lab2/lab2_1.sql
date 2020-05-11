@@ -1,4 +1,4 @@
-CREATE DATABASE Hairdresser
+﻿CREATE DATABASE hairdresser
 COLLATE Cyrillic_General_CI_AS
 
 CREATE TABLE HairDresser (
@@ -13,10 +13,9 @@ GO
 
 CREATE TABLE Service(
 id_service int IDENTITY(1,1) NOT NULL,
-id_hairdresser int NOT NULL,
 type varchar(50) NOT NULL,
 price money NOT NULL,
-PRIMARY KEY  (id_service)
+PRIMARY KEY (id_service)
 )
 GO
 
@@ -31,3 +30,9 @@ evaluation tinyint NOT NULL,
 PRIMARY KEY  (id_servicesperformed)
 )
 GO
+
+ALTER TABLE ServicesPerformed
+ADD FOREIGN KEY (id_hairdresser) REFERENCES HairDresser(id_hairdresser);
+
+ALTER TABLE ServicesPerformed
+ADD FOREIGN KEY (id_service) REFERENCES Service (id_service);

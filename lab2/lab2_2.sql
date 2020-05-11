@@ -1,4 +1,4 @@
-CREATE DATABASE ProductsInInvoices
+﻿CREATE DATABASE ProductsInInvoices
 COLLATE Cyrillic_General_CI_AS
 
 CREATE TABLE Product (
@@ -29,3 +29,9 @@ date date NOT NULL,
 PRIMARY KEY  (id_productsininvoices)
 )
 GO
+
+ALTER TABLE ProductsInInvoices
+ADD FOREIGN KEY (id_product) REFERENCES Product(id_product);
+
+ALTER TABLE ProductsInInvoices
+ADD FOREIGN KEY (id_invoice) REFERENCES Invoice (id_invoice);
