@@ -76,8 +76,7 @@ INNER JOIN (SELECT room_in_booking.id_room, MAX(room_in_booking.checkout_date) A
 			FROM room_in_booking 
 			WHERE room_in_booking.checkout_date BETWEEN '2019-04-01' AND '2019-04-30') AS room_in_booking 
 	GROUP BY room_in_booking.id_room) AS checkout_in_april ON checkout_in_april.id_room =  room_in_booking.id_room
-WHERE 
-	room_in_booking.id_room = checkout_in_april.id_room AND 
+WHERE
 	checkout_in_april.check_max = room_in_booking.checkout_date
 ORDER BY client.name;
 
@@ -130,9 +129,12 @@ CREATE NONCLUSTERED INDEX [IX_room_category_name] ON room_category(
 	[name] ASC
 )
 
-CREATE NONCLUSTERED INDEX [IX_room_in_booking_id_room-id_booking] ON room_in_booking(
-	[id_room] ASC,
+CREATE NONCLUSTERED INDEX [IX_room_in_booking_id_booking] ON room_in_booking(
 	[id_booking] ASC
+)
+
+CREATE NONCLUSTERED INDEX [IX_room_in_booking_id_room] ON room_in_booking (
+	[id_room] ASC
 )
 
 CREATE NONCLUSTERED INDEX [IX_room_in_booking_checkin_date-checkout_date] ON room_in_booking(
