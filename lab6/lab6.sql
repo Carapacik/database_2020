@@ -30,7 +30,7 @@ FROM mark
 INNER JOIN lesson on mark.id_lesson = lesson.id_lesson
 INNER JOIN student on mark.id_student = student.id_student
 INNER JOIN subject on lesson.id_subject = subject.id_subject
-WHERE subject.name = 'Информатика'
+WHERE subject.name = 'Информатика';
 	
 SELECT * FROM marks_students
 --3 Дать информацию о должниках с указанием фамилии студента и названия предмета. 
@@ -63,24 +63,26 @@ EXECUTE debtors @id_group = 4
 --4 Дать среднюю оценку студентов по каждому предмету для тех предметов, по
 --  которым занимается не менее 35 студентов
 SELECT 
-	subject.name,
+	subject.name, 
 	AVG(mark.mark) AS average_mark
-FROM mark
-INNER JOIN lesson ON mark.id_lesson = lesson.id_lesson
-INNER JOIN subject ON lesson.id_subject = subject.id_subject
-INNER JOIN student ON mark.id_student = student.id_student
+FROM student
+INNER JOIN [group] ON student.id_group = [group].id_group
+INNER JOIN lesson ON [group].id_group = lesson.id_group
+INNER JOIN [subject] ON lesson.id_subject = [subject].id_subject
+INNER JOIN mark ON lesson.id_lesson = mark.id_lesson
 GROUP BY subject.name
-HAVING COUNT(student.id_student) >= 35
+HAVING COUNT(DISTINCT student.id_student) >= 35;
 
 	-- Количество студентов по предметам
 SELECT 
 	subject.name,
-	COUNT(student.id_student) AS students_count
+	COUNT(DISTINCT student.id_student) AS students_count
 FROM student
-INNER JOIN mark ON mark.id_student = student.id_student
-INNER JOIN lesson ON mark.id_lesson = lesson.id_lesson
-INNER JOIN subject ON lesson.id_subject = subject.id_subject
-GROUP BY subject.name
+INNER JOIN [group] ON student.id_group = [group].id_group
+INNER JOIN lesson ON [group].id_group = lesson.id_group
+INNER JOIN [subject] ON lesson.id_subject = [subject].id_subject
+INNER JOIN mark ON lesson.id_lesson = mark.id_lesson
+GROUP BY subject.name;
 
 --5 Дать оценки студентов специальности ВМ по всем проводимым предметам с
 --  указанием группы, фамилии, предмета, даты. При отсутствии оценки заполнить
@@ -96,7 +98,7 @@ LEFT JOIN [group] ON student.id_group = [group].id_group
 LEFT JOIN lesson ON lesson.id_group = [group].id_group
 LEFT JOIN subject ON lesson.id_subject = subject.id_subject
 LEFT JOIN mark ON (lesson.id_lesson = mark.id_lesson AND student.id_student = mark.id_student)
-WHERE [group].name = 'ВМ'
+WHERE [group].name = 'ВМ';
 
 --6 Всем студентам специальности ПС, получившим оценки меньшие 5 по предмету БД 
 --  до 12.05, повысить эти оценки на 1 балл
@@ -111,7 +113,7 @@ WHERE
 	[group].name = 'ПС' AND 
 	mark.mark < 5 AND 
 	subject.name = 'БД' AND
-	lesson.date < '2019-05-12'
+	lesson.date < '2019-05-12';
 
 --7 Добавить необходимые индексы
 CREATE NONCLUSTERED INDEX [IX_lesson_id_teacher] ON [dbo].[lesson](
