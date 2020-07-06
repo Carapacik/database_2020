@@ -33,13 +33,11 @@ INNER JOIN subject on lesson.id_subject = subject.id_subject
 WHERE subject.name = 'Информатика'
 	
 SELECT * FROM marks_students
-
---3 Дать информацию о должниках с указанием фамилии студента и названия
--- предмета. Должниками считаются студенты, не имеющие оценки по предмету,
--- который ведется в группе. Оформить в виде процедуры, на входе
--- идентификатор группы
+--3 Дать информацию о должниках с указанием фамилии студента и названия предмета. 
+--  Должниками считаются студенты, не имеющие оценки по предмету,
+--  который ведется в группе. Оформить в виде процедуры, на входе идентификатор группы
 CREATE PROCEDURE debtors
-@id_group AS INT
+@id_group int
 AS
 SELECT 
 	student.name,
@@ -48,15 +46,19 @@ SELECT
 FROM student
 INNER JOIN [group] ON [group].id_group = student.id_group
 INNER JOIN lesson ON lesson.id_group = [group].id_group
-LEFT JOIN mark ON mark.id_student = student.id_student AND mark.id_lesson = lesson.id_lesson
 INNER JOIN subject ON subject.id_subject = lesson.id_subject
+LEFT JOIN mark ON mark.id_student = student.id_student AND mark.id_lesson = lesson.id_lesson
 WHERE [group].id_group = @id_group
 GROUP BY student.name, subject.name, [group].name
 HAVING COUNT(mark.mark) = 0
 ORDER BY student.name
 GO
 
+	-- Запуск процедуры
 EXECUTE debtors @id_group = 1
+EXECUTE debtors @id_group = 2
+EXECUTE debtors @id_group = 3
+EXECUTE debtors @id_group = 4
 
 --4 Дать среднюю оценку студентов по каждому предмету для тех предметов, по
 --  которым занимается не менее 35 студентов
@@ -68,7 +70,17 @@ INNER JOIN lesson ON mark.id_lesson = lesson.id_lesson
 INNER JOIN subject ON lesson.id_subject = subject.id_subject
 INNER JOIN student ON mark.id_student = student.id_student
 GROUP BY subject.name
-HAVING (COUNT(DISTINCT student.id_student) >= 35)
+HAVING COUNT(student.id_student) >= 35
+
+	-- Количество студентов по предметам
+SELECT 
+	subject.name,
+	COUNT(student.id_student) AS students_count
+FROM student
+INNER JOIN mark ON mark.id_student = student.id_student
+INNER JOIN lesson ON mark.id_lesson = lesson.id_lesson
+INNER JOIN subject ON lesson.id_subject = subject.id_subject
+GROUP BY subject.name
 
 --5 Дать оценки студентов специальности ВМ по всем проводимым предметам с
 --  указанием группы, фамилии, предмета, даты. При отсутствии оценки заполнить
@@ -86,8 +98,8 @@ LEFT JOIN subject ON lesson.id_subject = subject.id_subject
 LEFT JOIN mark ON (lesson.id_lesson = mark.id_lesson AND student.id_student = mark.id_student)
 WHERE [group].name = 'ВМ'
 
---6 Всем студентам специальности ПС, получившим оценки меньшие 5 по предмету
--- БД до 12.05, повысить эти оценки на 1 балл
+--6 Всем студентам специальности ПС, получившим оценки меньшие 5 по предмету БД 
+--  до 12.05, повысить эти оценки на 1 балл
 UPDATE mark
 SET mark = mark + 1
 FROM mark
