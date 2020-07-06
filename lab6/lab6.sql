@@ -64,12 +64,13 @@ EXECUTE debtors @id_group = 4
 --  которым занимается не менее 35 студентов
 SELECT 
 	subject.name, 
-	AVG(mark.mark) AS average_mark
+	AVG(mark.mark) AS average_mark,
+	COUNT (mark.mark) AS count_mark
 FROM student
-INNER JOIN [group] ON student.id_group = [group].id_group
-INNER JOIN lesson ON [group].id_group = lesson.id_group
-INNER JOIN [subject] ON lesson.id_subject = [subject].id_subject
-INNER JOIN mark ON lesson.id_lesson = mark.id_lesson
+LEFT JOIN [group] ON student.id_group = [group].id_group
+LEFT JOIN lesson ON [group].id_group = lesson.id_group
+LEFT JOIN mark ON (lesson.id_lesson = mark.id_lesson AND mark.id_student = student.id_student)
+LEFT JOIN [subject] ON lesson.id_subject = [subject].id_subject
 GROUP BY subject.name
 HAVING COUNT(DISTINCT student.id_student) >= 35;
 
@@ -78,10 +79,10 @@ SELECT
 	subject.name,
 	COUNT(DISTINCT student.id_student) AS students_count
 FROM student
-INNER JOIN [group] ON student.id_group = [group].id_group
-INNER JOIN lesson ON [group].id_group = lesson.id_group
-INNER JOIN [subject] ON lesson.id_subject = [subject].id_subject
-INNER JOIN mark ON lesson.id_lesson = mark.id_lesson
+LEFT JOIN [group] ON student.id_group = [group].id_group
+LEFT JOIN lesson ON [group].id_group = lesson.id_group
+LEFT JOIN mark ON (lesson.id_lesson = mark.id_lesson AND mark.id_student = student.id_student)
+LEFT JOIN [subject] ON lesson.id_subject = [subject].id_subject
 GROUP BY subject.name;
 
 --5 Дать оценки студентов специальности ВМ по всем проводимым предметам с
